@@ -1,0 +1,18 @@
+services:
+  logserver:
+    build: .
+    command: python log_server.py          # SSE server on :4000
+    volumes:
+      - /var/log:/var/log:ro               # host logs, read‑only
+    networks: [mcpnet]
+
+  agents:
+    build: .
+    command: python main.py
+    depends_on: [logserver]
+    networks: [mcpnet]
+    stdin_open: true   # same as “docker run -i”
+    tty: true  
+
+networks:
+  mcpnet:
